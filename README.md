@@ -20,7 +20,7 @@ Eleutheria is a web and mobile application designed to explore political parties
 
 ### Prerequisites
 
-- PHP >= 8.1
+- PHP >= 8.4
 - Composer
 - MySQL or another supported database
 - Node.js & NPM (for front-end assets or Vue.js integration)
