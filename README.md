@@ -1,4 +1,4 @@
-# Eleutheria
+# Project Eleutheria
 
 Eleutheria is a web and mobile application designed to explore political parties and their ideas. It also provides users with the ability to participate in simulated voting events to gather independent statistics ahead of official elections.
 
