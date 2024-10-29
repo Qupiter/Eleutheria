@@ -1,9 +1,11 @@
 <?php
 
-use App\Exceptions\ExceptionHandler;
+use App\Exceptions\Handler;
+use App\Http\Middleware\ForceJsonResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,14 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(ForceJsonResponse::class);
         $middleware->validateCsrfTokens(except: [
             'api/*'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Capture the request to pass it into the custom handler
-        $exceptions->render(function ($exception) {
-            $request = request(); // Get the current request instance
-            return ExceptionHandler::render($request, $exception); // Call the custom handler
+        $exceptions->render(function (Throwable $exception, Request $request) {
+            return app(Handler::class)->render($request, $exception);
         });
     })->create();
