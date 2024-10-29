@@ -1,27 +1,16 @@
 <?php
 
-use App\Http\Controllers\PartyController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
-Route::prefix('parties')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
 
-    // List all parties (Read)
-    Route::get('/', [PartyController::class, 'index'])->name('api.parties.index');
-
-//    // Show a single party by ID (Read)
-//    Route::get('/{id}', [PartyController::class, 'show'])->name('api.parties.show');
-//
-//    // Create a new party (Create)
-//    Route::post('/', [PartyController::class, 'store'])->name('api.parties.store');
-//
-//    // Update an existing party (Update)
-//    Route::put('/{id}', [PartyController::class, 'update'])->name('api.parties.update');
-//
-//    // Delete a party (Delete)
-//    Route::delete('/{id}', [PartyController::class, 'destroy'])->name('api.parties.destroy');
+// Version 1 endpoints
+// --------------------------------------
+Route::prefix('/v1')->group(function () {
 });

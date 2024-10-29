@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ExceptionHandler;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,8 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->validateCsrfTokens(except: [
+            'api/*'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Capture the request to pass it into the custom handler
+        $exceptions->render(function ($exception) {
+            $request = request(); // Get the current request instance
+            return ExceptionHandler::render($request, $exception); // Call the custom handler
+        });
     })->create();
