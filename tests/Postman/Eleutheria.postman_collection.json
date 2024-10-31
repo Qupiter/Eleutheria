@@ -79,17 +79,15 @@
 							"script": {
 								"exec": [
 									"var response = pm.response.json();\r",
-									"pm.environment.set('newUser', response.data.id);\r",
+									"pm.environment.set('token', response.data.result.token);\r",
 									"\r",
 									"pm.test(\"Status test 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
 									"pm.test('Response data test', function() {\r",
-									"    pm.expect(response.data.id).to.be.a('number');\r",
-									"    pm.expect(response.data.email).to.be.a('string');\r",
-									"    pm.expect(response.data.email).to.eql('newUser@gmail.com');\r",
-									"    pm.expect(response.data.authority).to.be.a('string').and.not.be.empty;\r",
+									"    pm.expect(response.data.message).to.be.a('string');\r",
+									"    pm.expect(response.data.result.token).to.be.a('string');\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -128,6 +126,36 @@
 							"path": [
 								"api",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vote Test",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/vote",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"vote"
 							]
 						}
 					},

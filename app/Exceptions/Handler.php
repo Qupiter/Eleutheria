@@ -13,7 +13,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
-                'errors'  => $e->errors() ?? [],
+                'errors'  => $this->getErrors($e),
                 'status'  => $this->getStatusCode($e),
             ], $this->getStatusCode($e));
         }
@@ -29,5 +29,12 @@ class Handler extends ExceptionHandler
         return method_exists($exception, 'getStatusCode')
             ? $exception->getStatusCode()
             : 500;
+    }
+
+    protected function getErrors(Throwable $exception)
+    {
+        return method_exists($exception, 'errors')
+            ? $exception->errors()
+            : [];
     }
 }

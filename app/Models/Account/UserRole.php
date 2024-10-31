@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enums;
+namespace App\Models\Account;
 
-enum Role: string
+enum UserRole: string
 {
     // a person responsible for deactivating parties, accounts, and overseeing roles and permissions
     case ADMIN     = 'admin';

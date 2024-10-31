@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use App\Models\Account\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -20,7 +20,7 @@ class AuthService
     {
         $user = User::where('email', $email)->first();
 
-        if (! $user || ! Hash::check($password, $user->password)) {
+        if (!$user || !Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -38,13 +38,18 @@ class AuthService
      */
     public function registerUser(array $data): User
     {
-        return User::create([
-            'first_name'   => $data['firstName'],
-            'last_name'    => $data['lastName'],
+        $user = User::create([
+            'first_name'  => $data['firstName'],
+            'last_name'   => $data['lastName'],
             'email'       => $data['email'],
             'password'    => Hash::make($data['password']),
             'phoneNumber' => $data['phoneNumber'],
         ]);
+
+        //TODO:: 'voter' string could be UserRole enum type
+        $user->assignRole('voter');
+
+        return $user;
     }
 
     /**
