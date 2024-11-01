@@ -42,7 +42,7 @@ Please provide the following details about your environment where the issue occu
 - PHP Version: 7.4
 - Operating System: MacOs
 - Web Server: Apache 2.4
-- Flexi Version: dev
+- Eleutheria Version: dev
 
 ## Additional Context
 

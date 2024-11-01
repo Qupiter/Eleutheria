@@ -11,7 +11,7 @@ assignees: ''
 
 ### Description
 
-Please provide a clear and concise description of the feature you are requesting. Include any context or use cases that would help explain why this feature is needed and how it will benefit the Flexi framework.
+Please provide a clear and concise description of the feature you are requesting. Include any context or use cases that would help explain why this feature is needed and how it will benefit Eleutheria.
 
 ---
 
