@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Account\User;
+use App\Models\Account\UserRole;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -26,8 +28,17 @@ class AuthService
             ]);
         }
 
+        $tokenName = 'voting-api-token-' . $user->id;
+
+        //TODO: maybe we need to add some logic around abilities
+        // but I hope we can manage permissions only with the spatie/laravel-permission package
+        $abilities = ['*'];
+
+        // Set the expiration time to 30 minutes from now
+        $expiresAt = Carbon::now()->addMinutes(30);
+
         // Generate and return token upon successful login
-        return $user->createToken('api-token')->plainTextToken;
+        return $user->createToken($tokenName, $abilities, $expiresAt)->plainTextToken;
     }
 
     /**
@@ -46,8 +57,8 @@ class AuthService
             'phoneNumber' => $data['phoneNumber'],
         ]);
 
-        //TODO:: 'voter' string could be UserRole enum type
-        $user->assignRole('voter');
+        // default role
+        $user->assignRole(UserRole::VOTER->value);
 
         return $user;
     }
