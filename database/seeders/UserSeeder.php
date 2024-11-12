@@ -31,7 +31,6 @@ class UserSeeder extends Seeder
                 'email'      => 'alice_admin@example.com',
                 'password'   => Hash::make('password123'),
                 'phone'      => '1234567890',
-                'is_active'  => true,
                 'role'       => UserRole::ADMIN->value,
             ],
             [
@@ -40,7 +39,6 @@ class UserSeeder extends Seeder
                 'email'      => 'bob_moderator@example.com',
                 'password'   => Hash::make('password123'),
                 'phone'      => '1234567891',
-                'is_active'  => true,
                 'role'       => UserRole::MODERATOR->value,
             ],
             [
@@ -49,7 +47,6 @@ class UserSeeder extends Seeder
                 'email'      => 'charlie_manager@example.com',
                 'password'   => Hash::make('password123'),
                 'phone'      => '1234567892',
-                'is_active'  => true,
                 'role'       => UserRole::MANAGER->value,
             ],
             [
@@ -58,7 +55,6 @@ class UserSeeder extends Seeder
                 'email'      => 'diana_member@example.com',
                 'password'   => Hash::make('password123'),
                 'phone'      => '1234567893',
-                'is_active'  => true,
                 'role'       => UserRole::MEMBER->value,
             ],
             [
@@ -67,7 +63,6 @@ class UserSeeder extends Seeder
                 'email'      => 'eve_voter@example.com',
                 'password'   => Hash::make('password123'),
                 'phone'      => '1234567894',
-                'is_active'  => true,
                 'role'       => UserRole::VOTER->value,
             ],
             [
@@ -76,7 +71,6 @@ class UserSeeder extends Seeder
                 'email'      => 'george_guest@example.com',
                 'password'   => Hash::make('password123'),
                 'phone'      => '1234567895',
-                'is_active'  => true,
                 'role'       => UserRole::GUEST->value,
             ]
         ];
@@ -88,7 +82,6 @@ class UserSeeder extends Seeder
                 'email'      => $userData['email'],
                 'password'   => $userData['password'],
                 'phone'      => $userData['phone'],
-                'is_active'  => $userData['is_active'],
             ]);
 
             // Assign the specific role

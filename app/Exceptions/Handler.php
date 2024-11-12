@@ -2,46 +2,79 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Http\Response\Failure;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use App\Exceptions\General\AuthenticationException;
+use App\Exceptions\General\AuthorizationException;
+use App\Exceptions\General\BaseApiException;
+use App\Exceptions\General\InternalServerErrorException;
+use App\Exceptions\General\MethodNotAllowedHttpException;
+use App\Exceptions\General\ModelNotFoundException;
+use App\Exceptions\General\NotFoundHttpException;
+use App\Exceptions\General\QueryException;
+use App\Exceptions\General\RoleAuthorizationException;
+use App\Exceptions\General\RoleDoesNotExistException;
+use App\Exceptions\General\ThrottleRequestsException;
+use App\Exceptions\General\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as BaseNotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException as BaseMethodNotAllowedHttpException;
+use Illuminate\Auth\AuthenticationException as BaseAuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException as BaseAuthorizationException;
+use Spatie\Permission\Exceptions\UnauthorizedException as BaseUnauthorizedException;
+use Illuminate\Validation\ValidationException as BaseValidationException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException as BaseThrottleRequestsException;
+use Illuminate\Database\Eloquent\ModelNotFoundException as BaseModelNotFoundException;
+use Illuminate\Database\QueryException as BaseQueryException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    /**
+     * @param $request
+     * @param Throwable $e
+     * @return JsonResponse|Response
+     * @throws Throwable
+     */
     public function render($request, Throwable $e): JsonResponse|Response
     {
-        $data = [
-            'success' => false,
-            'message' => $e->getMessage(),
-            'status'  => $this->getStatusCode($e),
-        ];
-
-        if ($errors = $this->getErrors($e)) {
-            $data['errors'] = $errors;
-        }
-
         if ($request->expectsJson()) {
-            return response()->json($data, $this->getStatusCode($e));
+            $customException = $this->handleExceptions($e);
+
+            return Failure::make($customException);
         }
 
         return parent::render($request, $e);
     }
 
     /**
-     * Determine the HTTP status code for the exception.
+     * Maps general laravel exceptions to custom exceptions
+     *
+     * @param Throwable $e
+     * @return BaseApiException
      */
-    protected function getStatusCode(Throwable $exception): int
+    private function handleExceptions(Throwable $e): BaseApiException
     {
-        return method_exists($exception, 'getStatusCode')
-            ? $exception->getStatusCode()
-            : 500;
-    }
+        // Exception customization
+        $exception = match ($e::class) {
+            BaseNotFoundHttpException::class         => new NotFoundHttpException(),
+            BaseMethodNotAllowedHttpException::class => new MethodNotAllowedHttpException(),
+            BaseAuthenticationException::class       => new AuthenticationException(),
+            BaseAuthorizationException::class        => new AuthorizationException(),
+            BaseUnauthorizedException::class         => new RoleAuthorizationException(),
+            BaseValidationException::class           => new ValidationException($e->errors()),
+            BaseThrottleRequestsException::class     => new ThrottleRequestsException(),
+            BaseQueryException::class                => new QueryException(),
+            RoleDoesNotExist::class                  => new RoleDoesNotExistException(),
+            default                                  => new InternalServerErrorException(),
+        };
 
-    protected function getErrors(Throwable $exception): ?array
-    {
-        return method_exists($exception, 'errors')
-            ? $exception->errors()
-            : null;
+        if ($e->getPrevious() instanceof BaseModelNotFoundException) {
+            $exception = new ModelNotFoundException();
+        }
+
+        return $exception;
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Account\AuthController;
-use App\Http\Controllers\Account\RoleController;
+use App\Http\Controllers\Account\UserRoleController;
+use App\Http\Controllers\Account\UserController;
 use App\Http\Controllers\Voting\VoteController;
 use App\Models\Account\UserRole;
 use Illuminate\Support\Facades\Route;
@@ -18,33 +19,31 @@ Route::middleware('auth:sanctum')->group(function () {
     // API V1 Routes
     // --------------------------------------
     Route::prefix('/v1')->group(function () {
-        // Role functionality
+        // Role management
         // --------------------------------------
-        Route::get('/getMyRoles', [RoleController::class, 'getUserRoles']);
-        // Voting functionality
+        Route::get('/users/roles', [UserRoleController::class, 'index']);
+        Route::group([
+            'prefix'     => '/users/roles',
+            'middleware' => ['role:' . UserRole::ADMIN->value]
+        ], function () {
+            Route::get('/{userId}', [UserRoleController::class, 'roles']);
+            Route::post('/assign', [UserRoleController::class, 'assign']);
+            Route::post('/remove', [UserRoleController::class, 'remove']);
+        });
+        // User management
         // --------------------------------------
-        Route::group(['middleware' => ['role:'. UserRole::VOTER->value]], function () {
+        Route::group([
+            'middleware' => ['role:' . UserRole::ADMIN->value]
+        ], function () {
+            Route::resource('users', UserController::class)->only([
+                'index', 'show', 'store', 'update', 'destroy'
+            ]);
+        });
+        // Voting
+        // --------------------------------------
+        Route::group(['middleware' => ['role:' . UserRole::VOTER->value]], function () {
             Route::get('/vote', [VoteController::class, 'vote']);
         });
-
-
-        // Role protected example routes
-        // --------------------------------------
-//        Route::group(['middleware' => ['role:voter']], function () {
-//            Route::get('/vote', [VoteController::class, 'vote']);
-//        });
-//        Route::group(['middleware' => ['role:moderator']], function () {
-//            Route::get('/vote', [VoteController::class, 'vote']);
-//        });
-//        Route::group(['middleware' => ['role:manager']], function () {
-//            Route::get('/vote', [VoteController::class, 'vote']);
-//        });
-//        Route::group(['middleware' => ['role:member']], function () {
-//            Route::get('/vote', [VoteController::class, 'vote']);
-//        });
-//        Route::group(['middleware' => ['role:admin']], function () {
-//            Route::get('/vote', [VoteController::class, 'vote']);
-//        });
     });
 });
 

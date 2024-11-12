@@ -24,7 +24,7 @@ class AuthService
 
         if (!$user || !Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'credentials' => ['The provided credentials are incorrect.'],
             ]);
         }
 
@@ -42,7 +42,7 @@ class AuthService
     }
 
     /**
-     * Register a new user.
+     * Register a new user as a VOTER.
      *
      * @param array $data
      * @return User
@@ -57,7 +57,7 @@ class AuthService
             'phoneNumber' => $data['phoneNumber'],
         ]);
 
-        // default role
+        // default role VOTER
         $user->assignRole(UserRole::VOTER->value);
 
         return $user;
