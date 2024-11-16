@@ -8,6 +8,60 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdateUserRequest",
+ *     type="object",
+ *     @OA\Property(
+ *         property="first_name",
+ *         type="string",
+ *         description="The user's first name",
+ *         example="John",
+ *         maxLength=255,
+ *         nullable=true
+ *     ),
+ *     @OA\Property(
+ *         property="last_name",
+ *         type="string",
+ *         description="The user's last name",
+ *         example="Doe",
+ *         maxLength=255,
+ *         nullable=true
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email",
+ *         description="The user's email address",
+ *         example="johndoe@example.com",
+ *         maxLength=255,
+ *         nullable=true
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         format="password",
+ *         description="The user's password (must be at least 8 characters)",
+ *         example="securepassword123",
+ *         nullable=true
+ *     ),
+ *     @OA\Property(
+ *         property="phone",
+ *         type="string",
+ *         description="The user's phone number",
+ *         example="+1234567890",
+ *         maxLength=15,
+ *         nullable=true
+ *     ),
+ *     @OA\Property(
+ *         property="is_active",
+ *         type="boolean",
+ *         description="Indicates if the user is active",
+ *         example=true,
+ *         nullable=true
+ *     )
+ * )
+ */
 class UpdateUserRequest extends FormRequest
 {
     /**

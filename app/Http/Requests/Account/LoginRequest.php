@@ -5,6 +5,27 @@ namespace App\Http\Requests\Account;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="LoginRequest",
+ *     type="object",
+ *     required={"email", "password"},
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email",
+ *         description="The user's email address",
+ *         example="johndoe@example.com"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         format="password",
+ *         description="The user's password",
+ *         example="secret123"
+ *     )
+ * )
+ */
 class LoginRequest extends FormRequest
 {
     /**

@@ -9,6 +9,25 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
+/**
+ * @OA\Schema(
+ *     schema="UserRoleRequest",
+ *     type="object",
+ *     required={"userId", "roleName"},
+ *     @OA\Property(
+ *         property="userId",
+ *         type="integer",
+ *         description="The ID of the user to assign the role to",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="roleName",
+ *         type="string",
+ *         description="The name of the role to assign to the user",
+ *         example="Admin"
+ *     )
+ * )
+ */
 class UserRoleRequest extends FormRequest
 {
     /**

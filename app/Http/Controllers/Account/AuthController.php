@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\LoginRequest;
 use App\Http\Requests\Account\RegisterRequest;
+use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use App\Http\Response\Success;
+use App\Models\Account\User;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -41,16 +44,18 @@ class AuthController extends Controller
     {
         $token = $this->authService->authenticate($request->email, $request->password);
 
-        return Success::make('User logged in successfully.', ['token' => $token]);
+        return Success::make('User logged in successfully.', new TokenResource($token), 201);
     }
 
     /**
-     * @param Request $request
      * @return JsonResponse
      */
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
-        $this->authService->logoutUser($request->user());
+        /** @var User $user */
+        $user = Auth::user();
+
+        $this->authService->logoutUser($user);
 
         return Success::make('User logged out successfully.');
     }

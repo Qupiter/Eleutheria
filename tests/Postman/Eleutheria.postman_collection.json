@@ -16,40 +16,37 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"pm.environment.set('newUser', response.result.id);\r",
+									"pm.environment.set(\"newUser\", pm.response.json().data.id);\r",
 									"\r",
 									"pm.test(\"Status code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response status is success\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.status).to.eql(\"success\");\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response has data field\", function () {\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User registered successfully.\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
 									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Data has message field\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.data).to.have.property(\"message\");\r",
-									"    pm.expect(jsonData.data.message).to.eql(\"User registered successfully.\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Result object has required fields\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    const result = jsonData.data.result;\r",
-									"\r",
-									"    pm.expect(result).to.have.property(\"first_name\");\r",
-									"    pm.expect(result).to.have.property(\"last_name\");\r",
-									"    pm.expect(result).to.have.property(\"email\");\r",
-									"    pm.expect(result).to.have.property(\"updated_at\");\r",
-									"    pm.expect(result).to.have.property(\"created_at\");\r",
-									"    pm.expect(result).to.have.property(\"id\");\r",
-									"});"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -71,7 +68,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"firstName\": \"Random\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"rand.doe@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\",\r\n  \"phoneNumber\": \"+1234567890\"\r\n}",
+							"raw": "{\r\n  \"firstName\": \"Random\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"rand.doe@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\",\r\n  \"phone\": \"+1234567890\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -79,13 +76,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/register",
+							"raw": "{{host}}:{{port}}/api/auth/register",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"auth",
 								"register"
 							]
 						}
@@ -99,17 +97,33 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"pm.environment.set('token', response.data.token);\r",
+									"pm.environment.set(\"token\", pm.response.json().data.token);\r",
 									"\r",
-									"pm.test(\"Status test 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test('Response data test', function() {\r",
-									"    pm.expect(response.message).to.be.a('string');\r",
-									"    pm.expect(response.data.token).to.be.a('string');\r",
-									"});"
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"token\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User logged in successfully.\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -131,7 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"rand.doe@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+							"raw": "{\r\n  \"email\": \"rand.doe3@example.com\",\r\n  \"password\": \"password123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -139,13 +153,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/login",
+							"raw": "{{host}}:{{port}}/api/auth/login",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"auth",
 								"login"
 							]
 						}
@@ -163,29 +178,28 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response status is success\", function () {\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.status).to.eql(\"success\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response has data field\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
 									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Data has message field\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.data).to.have.property(\"message\");\r",
-									"    pm.expect(jsonData.data.message).to.eql(\"User roles are: \");\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Result is an array and contains roles\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    const result = jsonData.data.result;\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User roles:\");\r",
+									"});\r",
 									"\r",
-									"    pm.expect(result).to.be.an('array');\r",
-									"    pm.expect(result).to.include(\"voter\");\r",
-									"});"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -206,7 +220,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}:{{port}}/api/v1/getMyRoles",
+							"raw": "{{host}}:{{port}}/api/v1/account/roles",
 							"host": [
 								"{{host}}"
 							],
@@ -214,7 +228,8 @@
 							"path": [
 								"api",
 								"v1",
-								"getMyRoles"
+								"account",
+								"roles"
 							]
 						}
 					},
@@ -231,28 +246,25 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response status is success\", function () {\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.status).to.eql(\"success\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response has data field\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
 									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Data has message field\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.data).to.have.property(\"message\");\r",
-									"    pm.expect(jsonData.data.message).to.eql(\"You voted successfully!\");\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Result is an empty array\", function () {\r",
-									"    const jsonData = pm.response.json();\r",
-									"    const result = jsonData.data.result;\r",
-									"\r",
-									"    pm.expect(result).to.be.an('array');\r",
-									"    pm.expect(result).to.have.lengthOf(0);\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"You voted successfully!\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -300,17 +312,33 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"pm.environment.set('token', response.data.token);\r",
+									"pm.environment.set(\"token\", pm.response.json().data.token);\r",
 									"\r",
-									"pm.test(\"Status test 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test('Response data test', function() {\r",
-									"    pm.expect(response.message).to.be.a('string');\r",
-									"    pm.expect(response.data.token).to.be.a('string');\r",
-									"});"
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"token\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User logged in successfully.\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -340,13 +368,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/login",
+							"raw": "{{host}}:{{port}}/api/auth/login",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"auth",
 								"login"
 							]
 						}
@@ -355,6 +384,54 @@
 				},
 				{
 					"name": "Users List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+									"    if (jsonData.data.length > 0) {\r",
+									"        const firstUser = jsonData.data[0];\r",
+									"        pm.expect(firstUser).to.have.property(\"id\");\r",
+									"        pm.expect(firstUser).to.have.property(\"firstName\");\r",
+									"        pm.expect(firstUser).to.have.property(\"lastName\");\r",
+									"        pm.expect(firstUser).to.have.property(\"email\");\r",
+									"        pm.expect(firstUser).to.have.property(\"phone\");\r",
+									"    }\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Users list:\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Meta code is 200\", function () {\r",
+									"    pm.expect(pm.response.json().meta.code).to.eql(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -385,6 +462,45 @@
 				},
 				{
 					"name": "Users Show",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User is:\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -399,7 +515,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}:{{port}}/api/v1/users/1000",
+							"raw": "{{host}}:{{port}}/api/v1/users/{{newUser}}",
 							"host": [
 								"{{host}}"
 							],
@@ -408,7 +524,7 @@
 								"api",
 								"v1",
 								"users",
-								"1000"
+								"{{newUser}}"
 							]
 						}
 					},
@@ -421,23 +537,35 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"pm.environment.set('newUser', response.data.result.id);\r",
+									"pm.environment.set(\"newUser\", pm.response.json().data.id);\r",
 									"\r",
-									"// Verify that the status code is 200\r",
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"// Verify that the response contains the expected keys\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User created successfully.\");\r",
+									"});\r",
+									"\r",
 									"pm.test(\"Response structure is valid\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"data\", \"meta\");\r",
-									"    pm.expect(jsonData.data).to.have.all.keys(\"message\", \"result\");\r",
-									"    pm.expect(jsonData.data.result).to.have.all.keys(\r",
-									"        \"first_name\", \"last_name\", \"email\", \"phone\", \"is_active\", \"updated_at\", \"created_at\", \"id\"\r",
-									"    );\r",
-									"    pm.expect(jsonData.meta).to.have.all.keys(\"code\", \"timestamp\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
 									"});\r",
 									""
 								],
@@ -461,7 +589,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"Some\",\r\n    \"last_name\": \"RandomDude\",\r\n    \"email\": \"spme.randude@example.com\",\r\n    \"password\": \"strongpassword123\",\r\n    \"phone\": \"1234567890\",\r\n    \"is_active\": true\r\n}\r\n",
+							"raw": "{\r\n    \"first_name\": \"Some\",\r\n    \"last_name\": \"RandomDude\",\r\n    \"email\": \"some.randude@example.com\",\r\n    \"password\": \"strongpassword123\",\r\n    \"phone\": \"1234567890\",\r\n    \"is_active\": true\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -490,22 +618,33 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"\r",
-									"// Verify that the status code is 200\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// Verify that the response contains the expected keys\r",
 									"pm.test(\"Response structure is valid\", function () {\r",
 									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"data\", \"meta\");\r",
-									"    pm.expect(jsonData.data).to.have.all.keys(\"message\", \"result\");\r",
-									"    pm.expect(jsonData.data.result).to.have.all.keys(\r",
-									"        \"first_name\", \"last_name\", \"email\", \"phone\", \"is_active\", \"updated_at\", \"created_at\", \"id\"\r",
-									"    );\r",
-									"    pm.expect(jsonData.meta).to.have.all.keys(\"code\", \"timestamp\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User updated successfully.\");\r",
 									"});\r",
 									""
 								],
@@ -529,7 +668,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"Other\",\r\n    \"last_name\": \"RandomDude\",\r\n    \"email\": \"spme.randude@example.com\",\r\n    \"password\": \"strongpassword123\",\r\n    \"phone\": \"1234567890\",\r\n    \"is_active\": true\r\n}\r\n",
+							"raw": "{\r\n    \"first_name\": \"Other\",\r\n    \"last_name\": \"RandomDude\",\r\n    \"email\": \"Update.Email@example.com\",\r\n    \"password\": \"strongpassword123\",\r\n    \"phone\": \"1234567890\",\r\n    \"is_active\": true\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -554,6 +693,112 @@
 				},
 				{
 					"name": "Users Deactivate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User deactivated successfully.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/users/deactivate/{{newUser}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"deactivate",
+								"{{newUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users Hard Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User deleted successfully.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -590,17 +835,33 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"pm.environment.set('token', response.data.token);\r",
+									"pm.environment.set(\"token\", pm.response.json().data.token);\r",
 									"\r",
-									"pm.test(\"Status test 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test('Response data test', function() {\r",
-									"    pm.expect(response.message).to.be.a('string');\r",
-									"    pm.expect(response.data.token).to.be.a('string');\r",
-									"});"
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"token\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User logged in successfully.\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -630,13 +891,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/login",
+							"raw": "{{host}}:{{port}}/api/auth/login",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"auth",
 								"login"
 							]
 						}
@@ -649,23 +911,39 @@
 			"name": "Roles",
 			"item": [
 				{
-					"name": "Get Token ADMIN Copy",
+					"name": "Get Token ADMIN",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var response = pm.response.json();\r",
-									"pm.environment.set('token', response.data.token);\r",
+									"pm.environment.set(\"token\", pm.response.json().data.token);\r",
 									"\r",
-									"pm.test(\"Status test 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test('Response data test', function() {\r",
-									"    pm.expect(response.message).to.be.a('string');\r",
-									"    pm.expect(response.data.token).to.be.a('string');\r",
-									"});"
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"token\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User logged in successfully.\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -695,13 +973,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/login",
+							"raw": "{{host}}:{{port}}/api/auth/login",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"auth",
 								"login"
 							]
 						}
@@ -715,6 +994,21 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has success status\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User roles:\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data array contains 'admin'\", function () {\r",
+									"    pm.expect(pm.response.json().data).to.be.an(\"array\").that.includes(\"admin\");\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -758,7 +1052,398 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/v1/users/roles",
+							"raw": "{{host}}:{{port}}/api/v1/account/roles",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"newUser\", pm.response.json().data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User created successfully.\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"Some\",\r\n    \"last_name\": \"RandomDude\",\r\n    \"email\": \"some.randude@example.com\",\r\n    \"password\": \"strongpassword123\",\r\n    \"phone\": \"1234567890\",\r\n    \"is_active\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/users",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Created User Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has success status\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User roles:\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data array contains 'admin'\", function () {\r",
+									"    pm.expect(pm.response.json().data).to.be.an(\"array\").that.includes(\"voter\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/account/roles/{{newUser}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"roles",
+								"{{newUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Assign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User has 'member' role\", function () {\r",
+									"    const roles = pm.response.json().data;\r",
+									"    pm.expect(roles).to.include(\"member\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User roles:\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": {{newUser}},\r\n    \"roleName\": \"member\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/account/roles/assign",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"roles",
+								"assign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Remove",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User does not have 'member' role\", function () {\r",
+									"    const roles = pm.response.json().data;\r",
+									"    pm.expect(roles).to.not.include(\"member\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User roles:\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": {{newUser}},\r\n    \"roleName\": \"member\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/account/roles/remove",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"roles",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users Hard Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response structure is valid\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
+									"\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"code\");\r",
+									"    pm.expect(jsonData.meta).to.have.property(\"timestamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is success\", function () {\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"User deleted successfully.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/v1/users/{{newUser}}",
 							"host": [
 								"{{host}}"
 							],
@@ -767,7 +1452,7 @@
 								"api",
 								"v1",
 								"users",
-								"roles"
+								"{{newUser}}"
 							]
 						}
 					},

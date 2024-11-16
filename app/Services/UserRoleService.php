@@ -20,7 +20,7 @@ class UserRoleService
     {
         $user = User::findOrFail($userId);
 
-        $role = Role::findByName($roleName);
+        $role = Role::findByName($roleName, 'web');
 
         if ($user->hasRole($roleName)) {
             throw new UserAlreadyHasThisRoleException();
@@ -42,7 +42,7 @@ class UserRoleService
     {
         $user = User::findOrFail($userId);
 
-        $role = Role::findByName($roleName);
+        $role = Role::findByName($roleName, 'web');
 
         $user->removeRole($roleName);
 

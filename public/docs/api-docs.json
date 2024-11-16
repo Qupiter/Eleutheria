@@ -1,0 +1,1383 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Eleutheria",
+        "description": "API documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://eleutheria.bg",
+            "description": "Commercial political platform for imitating election processes."
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "operationId": "798c4fffa226e55155b74bfe055742ba",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Log in a user",
+                "operationId": "eb5f85db4ba8a48b04d9e7031e505cf8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Log out a user",
+                "operationId": "fd455861b0a3cb9d559ad5574ae09b71",
+                "responses": {
+                    "200": {
+                        "description": "User logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Display a listing of users",
+                "operationId": "24c00dcf3c182b70f36b7f45d1edc9d9",
+                "responses": {
+                    "200": {
+                        "description": "A list of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserCollection"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Insufficient permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Store a newly created user",
+                "operationId": "931403ff0ab36f6c3a5b8ffe7a5b0faa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationFailure"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Insufficient permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Display the specified user",
+                "operationId": "c11dbf4d0dc0d3cb403a5935c6fd97a1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the user to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Insufficient permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update the specified user",
+                "operationId": "e3fd2f73eb81a80db24e21a93274b16f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationFailure"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Insufficient permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Soft delete a user",
+                "operationId": "cd49adc7f682ca0673468aed4edc0c21",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the user to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deactivated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Insufficient permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/deactivate/{id}": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Soft delete a user",
+                "operationId": "7f60d048e6067f7aa125480fd66d59f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deactivated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Insufficient permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/account/roles/{userId?}": {
+            "get": {
+                "tags": [
+                    "User Roles"
+                ],
+                "summary": "List roles of the authenticated user or passed user id",
+                "operationId": "d310a9b2e93a53ad0c792e2797bc79c3",
+                "responses": {
+                    "200": {
+                        "description": "List of roles for the authenticated user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "Admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/account/roles/assign": {
+            "post": {
+                "tags": [
+                    "User Roles"
+                ],
+                "summary": "Assign a role to a user",
+                "operationId": "3c576f86510f0bd649fa33f681fc8008",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRoleRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Roles updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "Admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User already has this role",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationFailure"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/account/roles/remove": {
+            "post": {
+                "tags": [
+                    "User Roles"
+                ],
+                "summary": "Remove a role from a user",
+                "operationId": "3231cc8c4966b57dc2fdf0dd2b5d2844",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRoleRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Roles updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "Admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User already has this role",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationFailure"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResourceNotFound"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleAuthorizationFailure"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AuthenticationFailure": {
+                "description": "Authentication failure response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Unauthorized"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "8c921657-8418-4236-bb03-9e02b5396ca9"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 401
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthorizationFailure": {
+                "description": "Authorization failure response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Forbidden"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "d6ecefb8-732f-4633-8f5b-e68bae10e58a"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 403
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "InternalServerError": {
+                "description": "Internal server error response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Internal Server Error"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "1d92c5d2-7dd4-4ea8-b922-278f946c1d1e"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 500
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "MethodNotAllowed": {
+                "description": "HTTP method not allowed response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "HTTP method not allowed"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "f63b9048-ee43-4b7a-9145-f43c4fca6a6e"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 405
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ResourceNotFound": {
+                "description": "Resource not found response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Resource not found"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "973f9dc7-ae2c-4bac-b053-1927cb5d9c13"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 404
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "EndpointNotFound": {
+                "description": "Endpoint not found response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Endpoint not found"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "9662e84f-9bef-4669-913e-be2a6f0a3ea2"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 404
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "DatabaseError": {
+                "description": "Database error response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Database error. Please try again later."
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "48bf3b4f-cf05-4885-8244-8dc941d251eb"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 500
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "RoleAuthorizationFailure": {
+                "description": "Insufficient permissions response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Insufficient permissions"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "05a1090e-1c72-44f4-9726-72f6e87c19d4"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 403
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "RoleNotFound": {
+                "description": "Role not found response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Role not found"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "8d717bfc-f07a-44d7-8ed7-7c04f4b36785"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 404
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ThrottleRequests": {
+                "description": "Too many requests response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Too many requests. Please slow down."
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "f4f45da9-6b5f-4818-9a3a-0c84d2de68e2"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 429
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationFailure": {
+                "description": "Validation failure response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Validation failed"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "ee4f70cd-9d01-4f8d-9f89-5c24492c1c6a"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 422
+                            },
+                            "details": {
+                                "description": "Detailed validation errors",
+                                "type": "object",
+                                "example": {
+                                    "field_name": [
+                                        "The field_name is required.",
+                                        "The field_name must be a string."
+                                    ]
+                                },
+                                "additionalProperties": {
+                                    "schema": "ValidationException",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "The field_name is required."
+                                    }
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationException": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "example": "The field_name is required."
+                }
+            },
+            "UserAlreadyExists": {
+                "description": "User already exists response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "User already exists."
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "123e4567-e89b-12d3-a456-426614174001"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 409
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "UserAlreadyHasThisRole": {
+                "description": "User already has this role response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "User already has this role."
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "41a6dd12-d4cb-483c-a072-a92561ebff50"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 400
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "The user's email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "description": "The user's password",
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "password",
+                    "phone"
+                ],
+                "properties": {
+                    "firstName": {
+                        "description": "The user's first name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "John"
+                    },
+                    "lastName": {
+                        "description": "The user's last name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "description": "The user's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "description": "The user's password (must be at least 8 characters)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    },
+                    "password_confirmation": {
+                        "description": "The confirmation of the user's password",
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    },
+                    "phone": {
+                        "description": "The user's phone number",
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "+1234567890"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserRequest": {
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "first_name": {
+                        "description": "The user's first name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "description": "The user's last name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "description": "The user's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "description": "The user's password (must be at least 8 characters)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "securepassword123"
+                    },
+                    "phone": {
+                        "description": "The user's phone number",
+                        "type": "string",
+                        "maxLength": 15,
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Indicates if the user is active",
+                        "type": "boolean",
+                        "example": true,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserRequest": {
+                "properties": {
+                    "first_name": {
+                        "description": "The user's first name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "John",
+                        "nullable": true
+                    },
+                    "last_name": {
+                        "description": "The user's last name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Doe",
+                        "nullable": true
+                    },
+                    "email": {
+                        "description": "The user's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "johndoe@example.com",
+                        "nullable": true
+                    },
+                    "password": {
+                        "description": "The user's password (must be at least 8 characters)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "securepassword123",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "The user's phone number",
+                        "type": "string",
+                        "maxLength": 15,
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Indicates if the user is active",
+                        "type": "boolean",
+                        "example": true,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UserRoleRequest": {
+                "required": [
+                    "userId",
+                    "roleName"
+                ],
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user to assign the role to",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "roleName": {
+                        "description": "The name of the role to assign to the user",
+                        "type": "string",
+                        "example": "Admin"
+                    }
+                },
+                "type": "object"
+            },
+            "TokenResource": {
+                "description": "Resource representing an authentication token",
+                "properties": {
+                    "token": {
+                        "description": "The authentication token",
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                    }
+                },
+                "type": "object"
+            },
+            "UserCollection": {
+                "description": "Collection of user resources",
+                "properties": {
+                    "data": {
+                        "description": "Array of user resources",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UserResource"
+                        }
+                    },
+                    "meta": {
+                        "description": "Pagination details",
+                        "properties": {
+                            "current_page": {
+                                "description": "Current page number",
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "last_page": {
+                                "description": "Last page number",
+                                "type": "integer",
+                                "example": 10
+                            },
+                            "per_page": {
+                                "description": "Number of items per page",
+                                "type": "integer",
+                                "example": 15
+                            },
+                            "total": {
+                                "description": "Total number of items",
+                                "type": "integer",
+                                "example": 150
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "links": {
+                        "description": "Pagination links",
+                        "properties": {
+                            "first": {
+                                "description": "URL to the first page",
+                                "type": "string",
+                                "example": "http://api.example.com/api/v1/account/users?page=1"
+                            },
+                            "last": {
+                                "description": "URL to the last page",
+                                "type": "string",
+                                "example": "http://api.example.com/api/v1/account/users?page=10"
+                            },
+                            "prev": {
+                                "description": "URL to the previous page",
+                                "type": "string",
+                                "example": "http://api.example.com/api/v1/account/users?page=1",
+                                "nullable": true
+                            },
+                            "next": {
+                                "description": "URL to the next page",
+                                "type": "string",
+                                "example": "http://api.example.com/api/v1/account/users?page=2",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "description": "Resource representing a user",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "firstName": {
+                        "description": "The first name of the user",
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "lastName": {
+                        "description": "The last name of the user",
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "description": "The email address of the user",
+                        "type": "string",
+                        "format": "email",
+                        "example": "johndoe@example.com"
+                    },
+                    "phone": {
+                        "description": "The phone number of the user",
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "FailureResponse": {
+                "description": "Generic failure response",
+                "properties": {
+                    "status": {
+                        "description": "Status of the response",
+                        "type": "string",
+                        "example": "fail"
+                    },
+                    "message": {
+                        "description": "Error message describing the failure",
+                        "type": "string",
+                        "example": "An error occurred while processing the request."
+                    },
+                    "uuid": {
+                        "description": "Unique identifier for the error instance",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "errors": {
+                        "description": "Detailed list of errors, if available",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "example": {
+                                "field": "error description"
+                            }
+                        }
+                    },
+                    "meta": {
+                        "description": "Metadata related to the response",
+                        "properties": {
+                            "code": {
+                                "description": "HTTP status code representing the error",
+                                "type": "integer",
+                                "example": 400
+                            },
+                            "timestamp": {
+                                "description": "The timestamp when the error occurred",
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2023-01-01T12:00:00+00:00"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResponse": {
+                "description": "Generic success response",
+                "properties": {
+                    "status": {
+                        "description": "Status of the response",
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "message": {
+                        "description": "A success message",
+                        "type": "string",
+                        "example": "Operation completed successfully."
+                    },
+                    "data": {
+                        "description": "The data returned with the response, if any",
+                        "type": "object",
+                        "example": {
+                            "id": 1,
+                            "name": "Sample Item"
+                        }
+                    },
+                    "meta": {
+                        "description": "Metadata related to the response",
+                        "properties": {
+                            "code": {
+                                "description": "HTTP status code",
+                                "type": "integer",
+                                "example": 200
+                            },
+                            "timestamp": {
+                                "description": "The timestamp when the response was generated",
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2023-01-01T12:00:00+00:00"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        },
+        {
+            "name": "User Roles",
+            "description": "User Roles"
+        }
+    ]
+}

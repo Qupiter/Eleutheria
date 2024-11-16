@@ -2,7 +2,7 @@
 
 namespace App\Http\Response;
 
-use App\Exceptions\General\BaseApiException;
+use App\Exceptions\BaseApiException;
 use Illuminate\Http\JsonResponse;
 
 class Failure implements ResponseInterface

@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 // Auth routes
 // --------------------------------------
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::prefix('/auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+});
 
 // API Routes
 // --------------------------------------
@@ -21,14 +23,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/v1')->group(function () {
         // Role management
         // --------------------------------------
-        Route::get('/users/roles', [UserRoleController::class, 'index']);
-        Route::group([
-            'prefix'     => '/users/roles',
-            'middleware' => ['role:' . UserRole::ADMIN->value]
-        ], function () {
-            Route::get('/{userId}', [UserRoleController::class, 'roles']);
-            Route::post('/assign', [UserRoleController::class, 'assign']);
-            Route::post('/remove', [UserRoleController::class, 'remove']);
+        Route::prefix('/account')->group(function () {
+            Route::get('/roles', [UserRoleController::class, 'index']);
+            Route::group([
+                'prefix'     => '/roles',
+                'middleware' => ['role:' . UserRole::ADMIN->value]
+            ], function () {
+                Route::get('/{userId?}', [UserRoleController::class, 'index']);
+                Route::post('/assign', [UserRoleController::class, 'assign']);
+                Route::post('/remove', [UserRoleController::class, 'remove']);
+            });
         });
         // User management
         // --------------------------------------
@@ -38,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::resource('users', UserController::class)->only([
                 'index', 'show', 'store', 'update', 'destroy'
             ]);
+            Route::delete('users/deactivate/{userId}', [UserController::class, 'discard']);
         });
         // Voting
         // --------------------------------------

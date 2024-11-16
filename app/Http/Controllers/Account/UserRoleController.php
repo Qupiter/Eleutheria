@@ -5,28 +5,36 @@ namespace App\Http\Controllers\Account;
 use App\Exceptions\Service\UserService\UserAlreadyHasThisRoleException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\UserRoleRequest;
-use App\Http\Response\Failure;
 use App\Http\Response\Success;
+use App\Models\Account\User;
 use App\Services\UserRoleService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserRoleController extends Controller
 {
     /**
+     * @param UserService $userService
      * @param UserRoleService $userRoleService
      */
-    public function __construct(protected UserRoleService $userRoleService) {}
+    public function __construct(
+        protected UserService $userService,
+        protected UserRoleService $userRoleService
+    ) {}
 
     /**
+     * @param int|null $id
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(?int $id = null): JsonResponse
     {
-        /** @var Collection $roles */
-        $roles = Auth::user()->getRoleNames();
+        /** @var User $user */
+        $user = Auth::user();
+
+        if($id) $user = $this->userService->getUserById($id);
+
+        $roles = $user->getRoleNames();
 
         return Success::make('User roles:', $roles->all());
     }

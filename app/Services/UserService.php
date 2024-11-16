@@ -86,7 +86,7 @@ class UserService
     }
 
     /**
-     * Deactivate a user by setting is_active to false.
+     * Discards a user
      *
      * @param int $id
      * @return User
@@ -98,5 +98,18 @@ class UserService
         $user->delete();
 
         return $user;
+    }
+
+    /**
+     * Deletes a user
+     *
+     * @param int $id
+     * @return void
+     */
+    public function hardDeleteUser(int $id): void
+    {
+        $user = User::withTrashed()->findOrFail($id);
+
+        $user->forceDelete();
     }
 }

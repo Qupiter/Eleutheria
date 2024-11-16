@@ -7,6 +7,7 @@ use App\Models\Account\UserRole;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\NewAccessToken;
 
 class AuthService
 {
@@ -15,10 +16,10 @@ class AuthService
      *
      * @param string $email
      * @param string $password
-     * @return string
+     * @return NewAccessToken
      * @throws ValidationException
      */
-    public function authenticate(string $email, string $password): string
+    public function authenticate(string $email, string $password): NewAccessToken
     {
         $user = User::where('email', $email)->first();
 
@@ -38,7 +39,7 @@ class AuthService
         $expiresAt = Carbon::now()->addMinutes(30);
 
         // Generate and return token upon successful login
-        return $user->createToken($tokenName, $abilities, $expiresAt)->plainTextToken;
+        return $user->createToken($tokenName, $abilities, $expiresAt);
     }
 
     /**
@@ -50,11 +51,11 @@ class AuthService
     public function registerUser(array $data): User
     {
         $user = User::create([
-            'first_name'  => $data['firstName'],
-            'last_name'   => $data['lastName'],
-            'email'       => $data['email'],
-            'password'    => Hash::make($data['password']),
-            'phoneNumber' => $data['phoneNumber'],
+            'first_name' => $data['firstName'],
+            'last_name'  => $data['lastName'],
+            'email'      => $data['email'],
+            'password'   => Hash::make($data['password']),
+            'phone'      => $data['phone'],
         ]);
 
         // default role VOTER

@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         $newUser = $this->userService->createUser($request->validated());
 
-        return Success::make('User created successfully.', new UserResource($newUser));
+        return Success::make('User created successfully.', new UserResource($newUser), 201);
     }
 
     /**
@@ -76,10 +76,23 @@ class UserController extends Controller
      * @param int  $id
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function discard(int $id): JsonResponse
     {
         $deactivatedUser = $this->userService->softDeleteUser($id);
 
         return Success::make('User deactivated successfully.', new UserResource($deactivatedUser));
+    }
+
+    /**
+     * Hard delete a user.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $this->userService->hardDeleteUser($id);
+
+        return Success::make('User deleted successfully.');
     }
 }

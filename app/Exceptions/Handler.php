@@ -2,12 +2,8 @@
 
 namespace App\Exceptions;
 
-use App\Http\Response\Failure;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use App\Exceptions\General\AuthenticationException;
 use App\Exceptions\General\AuthorizationException;
-use App\Exceptions\General\BaseApiException;
 use App\Exceptions\General\InternalServerErrorException;
 use App\Exceptions\General\MethodNotAllowedHttpException;
 use App\Exceptions\General\ModelNotFoundException;
@@ -17,17 +13,20 @@ use App\Exceptions\General\RoleAuthorizationException;
 use App\Exceptions\General\RoleDoesNotExistException;
 use App\Exceptions\General\ThrottleRequestsException;
 use App\Exceptions\General\ValidationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as BaseNotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException as BaseMethodNotAllowedHttpException;
-use Illuminate\Auth\AuthenticationException as BaseAuthenticationException;
+use App\Http\Response\Failure;
 use Illuminate\Auth\Access\AuthorizationException as BaseAuthorizationException;
-use Spatie\Permission\Exceptions\UnauthorizedException as BaseUnauthorizedException;
-use Illuminate\Validation\ValidationException as BaseValidationException;
-use Illuminate\Http\Exceptions\ThrottleRequestsException as BaseThrottleRequestsException;
+use Illuminate\Auth\AuthenticationException as BaseAuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException as BaseModelNotFoundException;
 use Illuminate\Database\QueryException as BaseQueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException as BaseThrottleRequestsException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException as BaseValidationException;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use Spatie\Permission\Exceptions\UnauthorizedException as BaseUnauthorizedException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException as BaseMethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as BaseNotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
