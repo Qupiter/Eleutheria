@@ -813,34 +813,6 @@
                 },
                 "type": "object"
             },
-            "RoleNotFound": {
-                "description": "Role not found response",
-                "properties": {
-                    "error": {
-                        "description": "Error details",
-                        "properties": {
-                            "message": {
-                                "description": "Error message",
-                                "type": "string",
-                                "example": "Role not found"
-                            },
-                            "uuid": {
-                                "description": "Unique identifier for the error instance",
-                                "type": "string",
-                                "format": "uuid",
-                                "example": "8d717bfc-f07a-44d7-8ed7-7c04f4b36785"
-                            },
-                            "code": {
-                                "description": "HTTP status code of the error",
-                                "type": "integer",
-                                "example": 404
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
             "ThrottleRequests": {
                 "description": "Too many requests response",
                 "properties": {
@@ -921,6 +893,34 @@
                     "type": "string",
                     "example": "The field_name is required."
                 }
+            },
+            "RoleNotFound": {
+                "description": "Role not found response",
+                "properties": {
+                    "error": {
+                        "description": "Error details",
+                        "properties": {
+                            "message": {
+                                "description": "Error message",
+                                "type": "string",
+                                "example": "Role not found"
+                            },
+                            "uuid": {
+                                "description": "Unique identifier for the error instance",
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "8d717bfc-f07a-44d7-8ed7-7c04f4b36785"
+                            },
+                            "code": {
+                                "description": "HTTP status code of the error",
+                                "type": "integer",
+                                "example": 404
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
             },
             "UserAlreadyExists": {
                 "description": "User already exists response",
