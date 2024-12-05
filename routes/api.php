@@ -1,27 +1,55 @@
 <?php
 
-use App\Http\Controllers\PartyController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Account\AuthController;
+use App\Http\Controllers\Account\UserRoleController;
+use App\Http\Controllers\Account\UserController;
+use App\Http\Controllers\Voting\VoteController;
+use App\Models\Account\UserRole;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-Route::prefix('parties')->group(function () {
-
-    // List all parties (Read)
-    Route::get('/', [PartyController::class, 'index'])->name('api.parties.index');
-
-//    // Show a single party by ID (Read)
-//    Route::get('/{id}', [PartyController::class, 'show'])->name('api.parties.show');
-//
-//    // Create a new party (Create)
-//    Route::post('/', [PartyController::class, 'store'])->name('api.parties.store');
-//
-//    // Update an existing party (Update)
-//    Route::put('/{id}', [PartyController::class, 'update'])->name('api.parties.update');
-//
-//    // Delete a party (Delete)
-//    Route::delete('/{id}', [PartyController::class, 'destroy'])->name('api.parties.destroy');
+// Auth routes
+// --------------------------------------
+Route::prefix('/auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
+
+// API Routes
+// --------------------------------------
+Route::middleware('auth:sanctum')->group(function () {
+    // API V1 Routes
+    // --------------------------------------
+    Route::prefix('/v1')->group(function () {
+        // Role management
+        // --------------------------------------
+        Route::prefix('/account')->group(function () {
+            Route::get('/roles', [UserRoleController::class, 'index']);
+            Route::group([
+                'prefix'     => '/roles',
+                'middleware' => ['role:' . UserRole::ADMIN->value]
+            ], function () {
+                Route::get('/{userId?}', [UserRoleController::class, 'index']);
+                Route::post('/assign', [UserRoleController::class, 'assign']);
+                Route::post('/remove', [UserRoleController::class, 'remove']);
+            });
+        });
+        // User management
+        // --------------------------------------
+        Route::group([
+            'middleware' => ['role:' . UserRole::ADMIN->value]
+        ], function () {
+            Route::resource('users', UserController::class)->only([
+                'index', 'show', 'store', 'update', 'destroy'
+            ]);
+            Route::delete('users/deactivate/{userId}', [UserController::class, 'discard']);
+        });
+        // Voting
+        // --------------------------------------
+        Route::group(['middleware' => ['role:' . UserRole::VOTER->value]], function () {
+            Route::get('/vote', [VoteController::class, 'vote']);
+        });
+    });
+});
+
+
