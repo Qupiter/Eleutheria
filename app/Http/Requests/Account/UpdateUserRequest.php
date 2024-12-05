@@ -52,13 +52,6 @@ use Illuminate\Support\Facades\Auth;
  *         example="+1234567890",
  *         maxLength=15,
  *         nullable=true
- *     ),
- *     @OA\Property(
- *         property="is_active",
- *         type="boolean",
- *         description="Indicates if the user is active",
- *         example=true,
- *         nullable=true
  *     )
  * )
  */
@@ -92,7 +85,6 @@ class UpdateUserRequest extends FormRequest
             'email'      => "sometimes|required|email|unique:users,email,{$this->route('user')}",
             'password'   => 'sometimes|nullable|string|min:8',
             'phone'      => 'nullable|string|max:15',
-            'is_active'  => 'nullable|boolean',
         ];
     }
 

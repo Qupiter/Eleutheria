@@ -16,13 +16,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         example=1
  *     ),
  *     @OA\Property(
- *         property="firstName",
+ *         property="first_name",
  *         type="string",
  *         description="The first name of the user",
  *         example="John"
  *     ),
  *     @OA\Property(
- *         property="lastName",
+ *         property="last_name",
  *         type="string",
  *         description="The last name of the user",
  *         example="Doe"
@@ -48,11 +48,11 @@ class UserResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id'        => $this->id,
-            'firstName' => $this->first_name,
-            'lastName'  => $this->last_name,
-            'email'     => $this->email,
-            'phone'     => $this->phone
+            'id'         => $this->id,
+            'first_name' => $this->first_name,
+            'last_name'  => $this->last_name,
+            'email'      => $this->email,
+            'phone'      => $this->phone
         ];
     }
 }

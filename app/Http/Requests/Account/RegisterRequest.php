@@ -9,16 +9,16 @@ use Illuminate\Foundation\Http\FormRequest;
  * @OA\Schema(
  *     schema="RegisterRequest",
  *     type="object",
- *     required={"firstName", "lastName", "email", "password", "phone"},
+ *     required={"first_name", "last_name", "email", "password", "phone"},
  *     @OA\Property(
- *         property="firstName",
+ *         property="first_name",
  *         type="string",
  *         description="The user's first name",
  *         example="John",
  *         maxLength=255
  *     ),
  *     @OA\Property(
- *         property="lastName",
+ *         property="last_name",
  *         type="string",
  *         description="The user's last name",
  *         example="Doe",
@@ -73,8 +73,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstName' => 'required|string|max:255',
-            'lastName'  => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:users',
             'password'  => 'required|string|min:8|confirmed',
             'phone'     => 'required|string|max:20',
@@ -89,13 +89,13 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'firstName.required' => 'First name is required.',
-            'firstName.string'   => 'First name must be a valid string.',
-            'firstName.max'      => 'First name cannot exceed 255 characters.',
+            'first_name.required' => 'First name is required.',
+            'first_name.string'   => 'First name must be a valid string.',
+            'first_name.max'      => 'First name cannot exceed 255 characters.',
 
-            'lastName.required' => 'Last name is required.',
-            'lastName.string'   => 'Last name must be a valid string.',
-            'lastName.max'      => 'Last name cannot exceed 255 characters.',
+            'last_name.required' => 'Last name is required.',
+            'last_name.string'   => 'Last name must be a valid string.',
+            'last_name.max'      => 'Last name cannot exceed 255 characters.',
 
             'email.required' => 'Email address is required.',
             'email.string'   => 'Email must be a valid string.',

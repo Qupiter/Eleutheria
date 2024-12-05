@@ -1,11 +1,13 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Account;
 
 use App\Models\Account\User;
+use App\Models\Account\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -37,7 +39,6 @@ class UserFactory extends Factory
             'email'          => $this->faker->unique()->safeEmail,
             'password'       => Hash::make('password123'),
             'phone'          => $this->faker->phoneNumber,
-            'is_active'      => $this->faker->boolean(90),
             'remember_token' => Str::random(10),
         ];
     }
@@ -50,5 +51,13 @@ class UserFactory extends Factory
         return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function withAdminRole(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $adminRole = Role::firstOrCreate(['name' => UserRole::ADMIN->value]);
+            $user->assignRole($adminRole);
+        });
     }
 }

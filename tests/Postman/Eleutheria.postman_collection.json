@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e5769b2c-073e-4a52-b919-07253ef35f46",
+		"_postman_id": "1bbf2180-afc0-4769-82ea-fef5d03371bf",
 		"name": "Eleutheria",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34643024"
@@ -38,8 +38,8 @@
 									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
 									"\r",
 									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
 									"\r",
@@ -68,7 +68,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"firstName\": \"Random\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"rand.doe@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\",\r\n  \"phone\": \"+1234567890\"\r\n}",
+							"raw": "{\r\n  \"first_name\": \"Random\",\r\n  \"last_name\": \"Doe\",\r\n  \"email\": \"rand.doe@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\",\r\n  \"phone\": \"+1234567890\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -145,7 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"rand.doe3@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+							"raw": "{\r\n  \"email\": \"rand.doe@example.com\",\r\n  \"password\": \"password123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -404,8 +404,8 @@
 									"    if (jsonData.data.length > 0) {\r",
 									"        const firstUser = jsonData.data[0];\r",
 									"        pm.expect(firstUser).to.have.property(\"id\");\r",
-									"        pm.expect(firstUser).to.have.property(\"firstName\");\r",
-									"        pm.expect(firstUser).to.have.property(\"lastName\");\r",
+									"        pm.expect(firstUser).to.have.property(\"first_name\");\r",
+									"        pm.expect(firstUser).to.have.property(\"last_name\");\r",
 									"        pm.expect(firstUser).to.have.property(\"email\");\r",
 									"        pm.expect(firstUser).to.have.property(\"phone\");\r",
 									"    }\r",
@@ -479,8 +479,8 @@
 									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
 									"\r",
 									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
 									"\r",
@@ -559,8 +559,8 @@
 									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
 									"\r",
 									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
 									"\r",
@@ -630,8 +630,8 @@
 									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
 									"\r",
 									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
 									"\r",
@@ -710,8 +710,8 @@
 									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
 									"\r",
 									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
 									"\r",
@@ -1096,8 +1096,8 @@
 									"    pm.expect(jsonData).to.have.property(\"meta\");\r",
 									"\r",
 									"    pm.expect(jsonData.data).to.have.property(\"id\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"firstName\");\r",
-									"    pm.expect(jsonData.data).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"first_name\");\r",
+									"    pm.expect(jsonData.data).to.have.property(\"last_name\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
 									"    pm.expect(jsonData.data).to.have.property(\"phone\");\r",
 									"\r",

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\General;
+namespace App\Exceptions\Service\UserService;
 
 use App\Exceptions\BaseApiException;
 

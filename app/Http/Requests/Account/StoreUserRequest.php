@@ -48,13 +48,6 @@ use Illuminate\Support\Facades\Auth;
  *         example="+1234567890",
  *         maxLength=15,
  *         nullable=true
- *     ),
- *     @OA\Property(
- *         property="is_active",
- *         type="boolean",
- *         description="Indicates if the user is active",
- *         example=true,
- *         nullable=true
  *     )
  * )
  */
@@ -81,8 +74,7 @@ class StoreUserRequest extends FormRequest
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email',
             'password'   => 'required|string|min:8',
-            'phone'      => 'nullable|string|max:15',
-            'is_active'  => 'nullable|boolean',
+            'phone'      => 'nullable|string|max:15'
         ];
     }
 

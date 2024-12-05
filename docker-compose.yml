@@ -1,0 +1,63 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: eleutheria
+        container_name: eleutheria
+        restart: unless-stopped
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+            - ./storage:/var/www/html/storage
+        ports:
+            - "9090:9000"
+        environment:
+            SERVICE_NAME: eleutheria
+            SERVICE_TAGS: dev
+        networks:
+            - laravel
+
+    webserver:
+        image: nginx:latest
+        container_name: laravel_nginx
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www/html
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        depends_on:
+            - app
+        networks:
+            - laravel
+
+    db:
+        image: mysql:8.0
+        container_name: laravel_db
+        restart: unless-stopped
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - laravel
+
+    composer:
+        image: composer:2.7
+        container_name: laravel_composer
+        volumes:
+            - .:/var/www/html
+        working_dir: /var/www/html
+        entrypoint: ["composer"]
+
+networks:
+    laravel:
+        driver: bridge
+
+volumes:
+    dbdata:

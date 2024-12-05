@@ -26,6 +26,14 @@ class UserSeeder extends Seeder
 
         $users = [
             [
+                'first_name' => 'Norman',
+                'last_name'  => 'Voter',
+                'email'      => 'norman_voter@example.com',
+                'password'   => Hash::make('password123'),
+                'phone'      => '1234567890',
+                'role'       => UserRole::VOTER->value,
+            ],
+            [
                 'first_name' => 'Alice',
                 'last_name'  => 'Admin',
                 'email'      => 'alice_admin@example.com',

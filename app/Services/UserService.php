@@ -22,8 +22,7 @@ class UserService
             'last_name'  => $userData['last_name'],
             'email'      => $userData['email'],
             'password'   => Hash::make($userData['password']),
-            'phone'      => $userData['phone'] ?? null,
-            'is_active'  => $userData['is_active'] ?? true,
+            'phone'      => $userData['phone'] ?? null
         ]);
 
         // default role
@@ -70,19 +69,6 @@ class UserService
         $user->update($userData);
 
         return $user;
-    }
-
-    /**
-     * Delete a user by ID.
-     *
-     * @param int $id
-     * @return bool
-     */
-    public function deleteUser(int $id): bool
-    {
-        $user = User::findOrFail($id);
-
-        return $user->delete();
     }
 
     /**
